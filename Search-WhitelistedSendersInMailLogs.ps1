@@ -12,6 +12,9 @@
 
  .PARAMETER endDate
   Mandatory parameter. End date of MessageTrace search. Start date can't be further than 30 days from EndDate. (example "01/26/2019")
+
+ .PARAMETER reportsPath
+  Optional patameter. Path where script will save reports. By default, current script directory is used.
  
  .NOTES
   Script should be executed in PowerShell console with Exchange Online session established
@@ -24,11 +27,11 @@ param(
     [datetime]$startDate,                 
     [Parameter(Mandatory=$true)]
     [datetime]$endDate,                   
-    [string]$reportsPath = $PSScriptRoot  # current directory of the script
+    [string]$reportsPath = $PSScriptRoot  #  current directory of the script
 )
 
 #---------------------------------------------------------[Initialisations]--------------------------------------------------------
-#Set Error Action to Stop
+#Set Error Action to Stop - script will stop execution on any error
 $ErrorActionPreference = 'Stop'
 
 #----------------------------------------------------------[Declarations]----------------------------------------------------------
@@ -67,8 +70,7 @@ Function Get-MessageTraceLogs()
 
     foreach ($sender in $MessageTrace)
     {
-
-        if ($sender.SenderAddress.Split('@').Count -eq 2)
+        if ($sender.SenderAddress.Split('@').Count -eq 2) # lazy check if email in proper format
         {
             $mailflowEmailAddresses += $sender.SenderAddress;
             $mailflowEmailDomain    += $sender.SenderAddress.Split('@')[1];
@@ -86,7 +88,6 @@ Function Search-MessageTraceLogsForAllowedSenders()
         $cnt = ($mailflowEmailDomain -match $wdomain.Key).Count
 
         $reportDomain = [PSCustomObject]@{
-
             DomainName          = $wdomain.Key
             Count               = $cnt
             Policy              = $wdomain.Value
@@ -107,7 +108,6 @@ Function Search-MessageTraceLogsForAllowedEmailAddresses()
         $cnt = ($mailflowEmailAddresses -match $wemails.Key).Count
 
         $reportEmailAddress = [PSCustomObject]@{
-
             EmailAddress        = $wemails.Key
             Count               = $cnt
             Policy              = $wemails.Value
