@@ -1,7 +1,7 @@
 ﻿<# 
 
  .SYNOPSIS
-  Generates a CSV reports for how many times senders from EOP Allow lists where found in mail logs.
+  Generates reports for how many times senders from EOP Allow lists where found in mail logs.
   
  .DESCRIPTION
   THIS CODE IS MADE AVAILABLE AS IS, WITHOUT WARRANTY OF ANY KIND. THE ENTIRE RISK
